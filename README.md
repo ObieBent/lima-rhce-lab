@@ -92,3 +92,44 @@ limactl sudoers | sudo tee /etc/sudoers.d/lima
 
 - https://github.com/lima-vm/socket_vmnet?tab=readme-ov-file#from-binary
 - https://lima-vm.io/docs/config/network/vmnet/#socket_vmnet
+
+## Create Machines
+
+How to use : 
+
+- To provision `controller` machine use task runner: 
+
+```
+task machines:bootstrap -- controller
+```
+
+- To provision all machines: 
+
+```
+task machines:bootstrap -- full-lab
+```
+
+
+- To stop `controller` machine:  
+
+```
+task machines:stop -- controller
+```
+
+- To stop all machines: 
+
+```
+task machines:stop -- full-lab
+```
+
+- To force delete `controller` machine: 
+
+```
+task machines:delete -- controller
+```
+
+- To force delete all machines: 
+
+```
+task machines:delete -- full-lab
+```
