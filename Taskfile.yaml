@@ -1,8 +1,6 @@
 ---
 version: "3"
 
-dotenv: ['node-on-macos.env']
-
 tasks:
   default: 
     cmd: task --list --sort none
