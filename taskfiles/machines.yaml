@@ -1,0 +1,327 @@
+---
+version: "3"
+
+tasks: 
+  bootstrap: 
+    desc: Spin up the machines for preparing the RHCE certification
+    silent: true
+    cmds:
+      - '{{ if eq .CLI_ARGS "controller" }}
+              task machines:create-control &&
+              task machines:start-control
+        {{ else if eq .CLI_ARGS "full-lab" }}
+              task machines:create-control &&
+              task machines:start-control &&
+              task machines:create-nodes &&
+              task machines:start-nodes
+        {{ else }}
+              echo "This option is not supported"
+        {{ end }}'
+
+  start: 
+    desc: Start machines which were created for the RHCE certification
+    silent: true
+    cmds:
+      - '{{ if eq .CLI_ARGS "controller" }}
+              task machines:start-control
+        {{ else if eq .CLI_ARGS "full-lab" }}
+              task machines:start-control &&
+              task machines:start-nodes
+        {{ else }}
+              echo "This option is not supported"
+        {{ end }}'
+
+
+  stop: 
+    desc: Stops running machines which were created for the RHCE certification
+    silent: true
+    cmds:
+      - '{{ if eq .CLI_ARGS "controller" }}
+              task machines:stop-control
+        {{ else if eq .CLI_ARGS "full-lab" }}
+              task machines:stop-control &&
+              task machines:stop-nodes
+        {{ else }}
+              echo "This option is not supported"
+        {{ end }}'
+
+  
+  delete: 
+    desc: Deletes running or stopped machines which were create for the RHCE certification
+    silent: true
+    cmds:
+      - '{{ if eq .CLI_ARGS "controller" }}
+              task machines:delete-control
+        {{ else if eq .CLI_ARGS "full-lab" }}
+              task machines:delete-control &&
+              task machines:delete-nodes
+        {{ else }}
+              echo "This option is not supported"
+        {{ end }}'
+
+  
+  list:
+    desc: List all machines which are currently created or started (a wrapper to 'limactl list')
+    silent: true
+    cmd: limactl list
+
+
+  create-control:
+    silent: true
+    cmds:
+      - task: create-controller
+
+  create-nodes: 
+    silent: true
+    cmds:
+      - task: create-managed-nodes
+
+  start-control: 
+    silent: true
+    cmds:
+      - task: start-controller
+
+  start-nodes:
+    silent: true
+    cmds:
+      - task: start-managed-nodes
+
+  delete-control: 
+    silent: true
+    cmds: 
+      - task: delete-controller
+
+  delete-nodes:
+    silent: true
+    cmds:
+      - task: delete-managed-nodes
+
+
+  create-controller:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mCreating 'controller' machine\e[0m"
+      - limactl create machines/rocky-9-machine-controller.yaml --name controller --set='.networks[].macAddress="52:55:55:12:34:01"' --tty=false
+
+  create-managed-nodes: 
+    silent: true
+    cmds: 
+      - task: create-node-1
+      - task: create-node-2
+      - task: create-node-3
+      - task: create-node-4
+      - task: create-node-5
+
+  start-controller:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mStarting 'controller' machine\e[0m"
+      - limactl start controller
+  
+  start-managed-nodes: 
+    silent: true
+    cmds:
+      - task: start-node-1
+      - task: start-node-2
+      - task: start-node-3
+      - task: start-node-4
+      - task: start-node-5
+
+  delete-controller: 
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mDeleting 'controller' machine\e[0m"
+      - limactl delete --force controller
+
+  delete-managed-nodes:
+    silent: true
+    cmds:
+      - task: delete-node-1
+      - task: delete-node-2
+      - task: delete-node-3
+      - task: delete-node-4
+      - task: delete-node-5
+
+  stop-control: 
+    silent: true
+    cmds:
+      - task: stop-controller
+
+  stop-controller: 
+    silent: true
+    internal: true
+    cmds:
+      - echo -e "\e[0;32mStopping 'controller' machine\e[0m"
+      - limactl stop controller
+
+  stop-nodes:
+    silent: true
+    cmds:
+      - task: stop-node-1
+      - task: stop-node-2
+      - task: stop-node-3
+      - task: stop-node-4
+      - task: stop-node-5
+
+
+  create-node-1:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mCreating 'node1' machine\e[0m"
+      - limactl create machines/rocky-9-machine.yaml --name node1 --set='.networks[].macAddress="52:55:55:12:34:02"' --tty=false
+
+
+  create-node-2:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mCreating 'node2' machine\e[0m"
+      - limactl create machines/rocky-9-machine.yaml --name node2 --set='.networks[].macAddress="52:55:55:12:34:03"' --tty=false
+
+
+  create-node-3:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mCreating 'node3' machine\e[0m"
+      - limactl create machines/rocky-9-machine.yaml --name node3 --set='.networks[].macAddress="52:55:55:12:34:04"' --tty=false
+
+
+  create-node-4:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mCreating 'node4' machine\e[0m"
+      - limactl create machines/rocky-9-machine.yaml --name node4 --set='.networks[].macAddress="52:55:55:12:34:05"' --tty=false
+
+
+  create-node-5:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mCreating 'node5' machine\e[0m"
+      - limactl create machines/rocky-9-machine.yaml --name node5 --set='.networks[].macAddress="52:55:55:12:34:06"' --tty=false
+
+
+  start-node-1:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mStarting 'node1' machine\e[0m"
+      - limactl start node1
+
+
+  start-node-2:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mStarting 'node2' machine\e[0m"
+      - limactl start node2
+
+
+  start-node-3:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mStarting 'node3' machine\e[0m"
+      - limactl start node3
+
+
+  start-node-4:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mStarting 'node4' machine\e[0m"
+      - limactl start node4
+
+
+  start-node-5:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mStarting 'node5' machine\e[0m"
+      - limactl start node5
+
+
+  stop-node-1:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mStopping 'node1' machine\e[0m"
+      - limactl stop -f node1 
+
+
+  stop-node-2:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mStopping 'node2' machine\e[0m"
+      - limactl stop node2 -f
+
+
+  stop-node-3:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mStopping 'node3' machine\e[0m"
+      - limactl stop node3 -f
+
+
+  stop-node-4:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mStopping 'node4' machine\e[0m"
+      - limactl stop node4 -f
+
+
+  stop-node-5:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mStopping 'node5' machine\e[0m"
+      - limactl stop -f node5
+
+
+  delete-node-1:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mDeleting 'node1' machine\e[0m"
+      - limactl delete node1 --force
+
+
+  delete-node-2:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mDeleting 'node2' machine\e[0m"
+      - limactl delete node2 --force
+
+
+  delete-node-3:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mDeleting 'node3' machine\e[0m"
+      - limactl delete node3 --force
+
+
+  delete-node-4:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mDeleting 'node4' machine\e[0m"
+      - limactl delete node4 --force
+
+
+  delete-node-5:
+    silent: true
+    internal: true
+    cmds: 
+      - echo -e "\e[0;32mDeleting 'node5' machine\e[0m"
+      - limactl delete node5 --force

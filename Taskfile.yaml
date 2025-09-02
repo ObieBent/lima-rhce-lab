@@ -1,0 +1,18 @@
+---
+version: "3"
+
+dotenv: ['node-on-macos.env']
+
+tasks:
+  default: 
+    cmd: task --list --sort none
+    silent: true
+
+includes: 
+  machines:
+    silent: true
+    taskfile: taskfiles/machines.yaml
+
+  brew:
+    silent: true
+    taskfile: taskfiles/homebrew.yaml
