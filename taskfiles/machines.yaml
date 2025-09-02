@@ -65,6 +65,13 @@ tasks:
     silent: true
     cmd: limactl list
 
+  boot-nodes: 
+    desc: Spin up managed nodes for setting up the RHCE lab
+    silent: true
+    cmds:
+      - task machines:create-nodes && task machines:start-nodes
+
+  
 
   create-control:
     silent: true
@@ -96,13 +103,12 @@ tasks:
     cmds:
       - task: delete-managed-nodes
 
-
   create-controller:
     silent: true
     internal: true
     cmds: 
       - echo -e "\e[0;32mCreating 'controller' machine\e[0m"
-      - limactl create machines/rocky-9-machine-controller.yaml --name controller --set='.networks[].macAddress="52:55:55:12:34:00"' --tty=false
+      - limactl create machines/fedora-42-controller.yaml --name controller --set='.networks[].macAddress="52:55:55:12:34:00"' --tty=false
 
   create-managed-nodes: 
     silent: true
@@ -172,7 +178,7 @@ tasks:
     internal: true
     cmds: 
       - echo -e "\e[0;32mCreating 'node1' machine\e[0m"
-      - limactl create machines/rocky-9-machine.yaml --name node1 --set='.networks[].macAddress="52:55:55:12:34:01"' --tty=false
+      - limactl create machines/fedora-42.yaml --name node1 --set='.networks[].macAddress="52:55:55:12:34:01"' --tty=false
 
 
   create-node-2:
@@ -180,7 +186,7 @@ tasks:
     internal: true
     cmds: 
       - echo -e "\e[0;32mCreating 'node2' machine\e[0m"
-      - limactl create machines/rocky-9-machine.yaml --name node2 --set='.networks[].macAddress="52:55:55:12:34:02"' --tty=false
+      - limactl create machines/fedora-42.yaml --name node2 --set='.networks[].macAddress="52:55:55:12:34:02"' --tty=false
 
 
   create-node-3:
@@ -188,7 +194,7 @@ tasks:
     internal: true
     cmds: 
       - echo -e "\e[0;32mCreating 'node3' machine\e[0m"
-      - limactl create machines/rocky-9-machine.yaml --name node3 --set='.networks[].macAddress="52:55:55:12:34:03"' --tty=false
+      - limactl create machines/fedora-42.yaml --name node3 --set='.networks[].macAddress="52:55:55:12:34:03"' --tty=false
 
 
   create-node-4:
@@ -196,7 +202,7 @@ tasks:
     internal: true
     cmds: 
       - echo -e "\e[0;32mCreating 'node4' machine\e[0m"
-      - limactl create machines/rocky-9-machine.yaml --name node4 --set='.networks[].macAddress="52:55:55:12:34:04"' --tty=false
+      - limactl create machines/fedora-42.yaml --name node4 --set='.networks[].macAddress="52:55:55:12:34:04"' --tty=false
 
 
   create-node-5:
@@ -204,7 +210,7 @@ tasks:
     internal: true
     cmds: 
       - echo -e "\e[0;32mCreating 'node5' machine\e[0m"
-      - limactl create machines/rocky-9-machine.yaml --name node5 --set='.networks[].macAddress="52:55:55:12:34:05"' --tty=false
+      - limactl create machines/fedora-42.yaml --name node5 --set='.networks[].macAddress="52:55:55:12:34:05"' --tty=false
 
 
   start-node-1:
