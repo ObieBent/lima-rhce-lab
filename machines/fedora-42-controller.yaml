@@ -77,8 +77,8 @@ provision:
 - mode: system
   script: | 
     dnf -y update
-    dnf -y install jq podman gcc python3-pip python3-devel vim-enhanced python3-onigurumacffi
-    python3 -m pip install ansible-dev-tools --user
+    dnf -y install jq podman gcc python3-pip python3-devel vim-enhanced python3-onigurumacffi policycoreutils-python-utils
+    python3 -m pip install ansible-dev-tools ansible-navigator --user
     echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.profile
     source ~/.profile
 

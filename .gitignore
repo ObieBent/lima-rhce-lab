@@ -1,0 +1,14 @@
+# OS-specific
+.DS_Store
+*.retry
+.*
+!.gitignore
+!.git/
+
+
+# editors
+*.swp
+
+# materials
+materials/
+collections/

@@ -24,7 +24,7 @@ provision:
     set -eux -o pipefail 
 
     cat <<EOF | tee -a /etc/hosts
-    172.25.250.8    controller
+    172.25.250.8    control
     172.25.250.9    node1 
     172.25.250.10   node2
     172.25.250.11   node3
@@ -73,3 +73,9 @@ provision:
     # Do not clear screen when less finishes, keeps the man on screen
     export LESS='FiX'
     EOF
+
+- mode: system
+  script: | 
+    dnf -y update
+    dnf -y install firewalld policycoreutils-python-utils
+    systemctl enable --now firewalld
