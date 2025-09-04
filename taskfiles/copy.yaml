@@ -1,0 +1,10 @@
+---
+version: "3"
+
+tasks:
+  copy:
+    desc: Copy various required files
+    cmds:
+      - limactl copy ~/.lima/_config/user control:~/.ssh
+      - limactl copy collections/* control:~/
+      - limactl copy materials/* control:~/

@@ -2,11 +2,11 @@
 version: "3"
 
 tasks:
-  default: 
+  default:
     cmd: task --list --sort none
     silent: true
 
-includes: 
+includes:
   machines:
     silent: true
     taskfile: taskfiles/machines.yaml
@@ -14,3 +14,7 @@ includes:
   brew:
     silent: true
     taskfile: taskfiles/homebrew.yaml
+
+  fetch:
+    silent: true
+    taskfile: taskfiles/copy.yaml

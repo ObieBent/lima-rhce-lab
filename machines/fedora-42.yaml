@@ -1,9 +1,9 @@
-vmType: vz 
+vmType: vz
 
 images:
-- location: https://download.fedoraproject.org/pub/fedora/linux/releases/42/Cloud/aarch64/images/Fedora-Cloud-Base-Generic-42-1.1.aarch64.qcow2
-  arch: aarch64
-  digest: sha256:e10658419a8d50231037dc781c3155aa94180a8c7a74e5cac2a6b09eaa9342b7
+  - location: https://download.fedoraproject.org/pub/fedora/linux/releases/42/Cloud/aarch64/images/Fedora-Cloud-Base-Generic-42-1.1.aarch64.qcow2
+    arch: aarch64
+    digest: sha256:e10658419a8d50231037dc781c3155aa94180a8c7a74e5cac2a6b09eaa9342b7
 
 # Virtual Machine (VM) specification (CPUs, RAM and Disk)
 cpus: 2
@@ -11,71 +11,69 @@ memory: "2GiB"
 
 # Networking configuration
 networks:
-- lima: shared
-  macAddress: "12:34:56:78:9A:BC"
+  - lima: shared
+    macAddress: "12:34:56:78:9A:BC"
 
+provision:
+  # Add nodes to '/etc/hosts'
 
-provision: 
-# Add nodes to '/etc/hosts'
+  - mode: system
+    script: |
+      #!/bin/bash
+      set -eux -o pipefail 
 
-- mode: system
-  script: | 
-    #!/bin/bash
-    set -eux -o pipefail 
+      cat <<EOF | tee -a /etc/hosts
+      172.25.250.8    control
+      172.25.250.9    node1 
+      172.25.250.10   node2
+      172.25.250.11   node3
+      172.25.250.12   node4
+      172.25.250.13   node5
+      EOF
 
-    cat <<EOF | tee -a /etc/hosts
-    172.25.250.8    control
-    172.25.250.9    node1 
-    172.25.250.10   node2
-    172.25.250.11   node3
-    172.25.250.12   node4
-    172.25.250.13   node5
-    EOF
+  - mode: system
+    script: |
+      #!/bin/bash
+      set -eux -o pipefail 
 
+      mkdir /etc/bash.bashrc.d
 
-- mode: system
-  script: |
-    #!/bin/bash
-    set -eux -o pipefail 
+      cat <<EOF | tee -a /etc/bash.bashrc.d/default
+      # Avoid deletion of screen 
+      export LESS="-X"
+      export PAGER=/usr/bin/less
+      export EDITOR=vi
+      alias ls='/bin/ls -CF'
+      alias rm='rm -i'
+      alias more='less'
+      # Define graphic term title bar
+      case $TERM in
+        xterm*|rxvt)
+          TITLEBAR='\[\e]0;\h:\w\a\]';
+          ;;
+        *)
+          TITLEBAR="";
+          ;;
+      esac
+      # Bash prompt configuration for root
+      if [ $UID -eq 0 ]; then
+        _PC=30
+      # Bash prompt configuration for user
+      else
+        _PC=31
+      export PS1=$TITLEBAR'\[\e['$_PT';'$_PC'm\]\u@\h:\w\[\e[$(($??7:0));37m\]\$\[\e[0;0m\] '
+      umask 022
+      export LS_OPTIONS='--color=auto'
+      eval `dircolors`
+      alias ls='ls $LS_OPTIONS'
+      alias ll='ls $LS_OPTIONS -l'
+      alias l='ls $LS_OPTIONS -lA'
+      # Do not clear screen when less finishes, keeps the man on screen
+      export LESS='FiX'
+      EOF
 
-    mkdir /etc/bash.bashrc.d
-
-    cat <<EOF | tee -a /etc/bash.bashrc.d/default
-    # Avoid deletion of screen 
-    export LESS="-X"
-    export PAGER=/usr/bin/less
-    export EDITOR=vi
-    alias ls='/bin/ls -CF'
-    alias rm='rm -i'
-    alias more='less'
-    # Define graphic term title bar
-    case $TERM in
-      xterm*|rxvt)
-        TITLEBAR='\[\e]0;\h:\w\a\]';
-        ;;
-      *)
-        TITLEBAR="";
-        ;;
-    esac
-    # Bash prompt configuration for root
-    if [ $UID -eq 0 ]; then
-      _PC=30
-    # Bash prompt configuration for user
-    else
-      _PC=31
-    export PS1=$TITLEBAR'\[\e['$_PT';'$_PC'm\]\u@\h:\w\[\e[$(($??7:0));37m\]\$\[\e[0;0m\] '
-    umask 022
-    export LS_OPTIONS='--color=auto'
-    eval `dircolors`
-    alias ls='ls $LS_OPTIONS'
-    alias ll='ls $LS_OPTIONS -l'
-    alias l='ls $LS_OPTIONS -lA'
-    # Do not clear screen when less finishes, keeps the man on screen
-    export LESS='FiX'
-    EOF
-
-- mode: system
-  script: | 
-    dnf -y update
-    dnf -y install firewalld policycoreutils-python-utils
-    systemctl enable --now firewalld
+  - mode: system
+    script: |
+      dnf -y update
+      dnf -y install firewalld policycoreutils-python-utils cronie
+      systemctl enable --now firewalld
