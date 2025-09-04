@@ -107,8 +107,8 @@ tasks:
     silent: true
     internal: true
     cmds: 
-      - echo -e "\e[0;32mCreating 'controller' machine\e[0m"
-      - limactl create machines/fedora-42-controller.yaml --name controller --set='.networks[].macAddress="52:55:55:12:34:00"' --tty=false
+      - echo -e "\e[0;32mCreating 'control' machine\e[0m"
+      - limactl create machines/fedora-42-controller.yaml --name control --set='.networks[].macAddress="52:55:55:12:34:00"' --tty=false
 
   create-managed-nodes: 
     silent: true
@@ -123,8 +123,8 @@ tasks:
     silent: true
     internal: true
     cmds: 
-      - echo -e "\e[0;32mStarting 'controller' machine\e[0m"
-      - limactl start controller
+      - echo -e "\e[0;32mStarting 'control' machine\e[0m"
+      - limactl start control
   
   start-managed-nodes: 
     silent: true
@@ -139,8 +139,8 @@ tasks:
     silent: true
     internal: true
     cmds: 
-      - echo -e "\e[0;32mDeleting 'controller' machine\e[0m"
-      - limactl delete --force controller
+      - echo -e "\e[0;32mDeleting 'control' machine\e[0m"
+      - limactl delete --force control
 
   delete-managed-nodes:
     silent: true
@@ -154,14 +154,14 @@ tasks:
   stop-control: 
     silent: true
     cmds:
-      - task: stop-controller
+      - task: stop-control
 
   stop-controller: 
     silent: true
     internal: true
     cmds:
-      - echo -e "\e[0;32mStopping 'controller' machine\e[0m"
-      - limactl stop controller
+      - echo -e "\e[0;32mStopping 'control' machine\e[0m"
+      - limactl stop control
 
   stop-nodes:
     silent: true
